@@ -1,4 +1,4 @@
-# Svelter Search
+# Svelter Search | Client first full-text search library
 
 Svelter Search is a JavaScript library that synchronizes data from a search API into the browser's IndexedDB for offline and efficient **full-text searching**. By performing searches against the IndexedDB, it reduces the number of server requests, enhancing performance and user experience.
 
