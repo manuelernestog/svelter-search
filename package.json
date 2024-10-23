@@ -1,8 +1,7 @@
 {
   "name": "svelter-search",
-  "version": "1.0.0",
+  "version": "0.0.2",
   "description": "Client first full-text search library",
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "babel src -d lib"
@@ -13,6 +12,12 @@
   "dependencies": {
     "dexie": "^4.0.9"
   },
+  "main": "lib/svelterSearch.js",
+  "files": [
+    "lib/",
+    "README.md",
+    "LICENSE"
+  ],
   "devDependencies": {
     "@babel/cli": "^7.25.9",
     "@babel/core": "^7.25.8",
