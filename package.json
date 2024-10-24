@@ -3,24 +3,25 @@
   "version": "0.0.2",
   "description": "Client first full-text search library",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel src -d lib"
+    "build": "webpack"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Manuel Ernesto Garcia",
+  "license": "MIT",
   "dependencies": {
     "dexie": "^4.0.9"
   },
-  "main": "lib/svelterSearch.js",
+  "main": "dist/bundle.js", 
   "files": [
     "lib/",
     "README.md",
     "LICENSE"
   ],
   "devDependencies": {
-    "@babel/cli": "^7.25.9",
-    "@babel/core": "^7.25.8",
-    "@babel/preset-env": "^7.25.9"
+    "babel-loader": "^9.0.0",
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "webpack": "^5.0.0",
+    "webpack-cli": "^4.0.0"
   }
 }
