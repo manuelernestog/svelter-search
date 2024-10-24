@@ -11,14 +11,13 @@
   "dependencies": {
     "dexie": "^4.0.9"
   },
-  "main": "dist/bundle.js", 
+  "main": "dist/bundle.js",
   "files": [
-    "lib/",
+    "dist/",
     "README.md",
     "LICENSE"
   ],
   "devDependencies": {
-    "babel-loader": "^9.0.0",
     "@babel/core": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "webpack": "^5.0.0",
