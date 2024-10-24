@@ -1,6 +1,6 @@
 {
   "name": "svelter-search",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Client first full-text search library",
   "scripts": {
     "build": "webpack"
