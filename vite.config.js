@@ -1,12 +1,29 @@
-const path = require('path')
-const { defineConfig } = require('vite')
+// vite.config.ts
 
-module.exports = defineConfig({
+import { defineConfig } from "vite";
+import dts from "vite-plugin-dts";
+
+export default defineConfig({
   build: {
     lib: {
-      entry: path.resolve(__dirname, 'src/index.js'),
-      name: 'Svelter Search',
-      fileName: (format) => `SVELTER_SEARCH.${format}.js`
-    }
-  }
+      entry: "src/index.ts",
+      name: "SvelterSearch",
+      fileName: (format) => `svelter-search.${format}.js`,
+      formats: ["es", "umd"],
+    },
+    rollupOptions: {
+      // Externaliza dependencias que no quieras incluir en el bundle
+      external: ["dexie"],
+      output: {
+        globals: {
+          dexie: "Dexie",
+        },
+      },
+    },
+  },
+  plugins: [
+    dts({
+      insertTypesEntry: true,
+    }),
+  ],
 });
