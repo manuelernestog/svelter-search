@@ -33,8 +33,7 @@ class l {
     return Date.now() - this.last_update.getTime() >= this.update_interval ? !0 : await this.isRemoteChanged();
   }
   async isRemoteChanged() {
-    if (!this.date_url)
-      return !1;
+    if (!this.date_url) return !1;
     try {
       const t = await (await fetch(this.date_url)).json();
       return new Date(t.updated_at) > this.last_update;
@@ -43,8 +42,7 @@ class l {
     }
   }
   async processData(e) {
-    if (!Array.isArray(e))
-      throw new Error("Data must be an array of items.");
+    if (!Array.isArray(e)) throw new Error("Data must be an array of items.");
     await this.db.transaction("rw", this.searchTable, async () => {
       for (const t of e)
         if (t.id)
@@ -65,12 +63,10 @@ class l {
     await this.searchTable.clear(), localStorage.removeItem(`svelter_search_${this.search_id}_last_update`), console.log("Database purged for search_id:", this.search_id);
   }
   async search(e) {
-    if (!e)
-      return [];
+    if (!e) return [];
     this.auto_update && await this.update();
     const a = e.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().match(/\b\w+\b/g);
-    if (!a || a.length === 0)
-      return [];
+    if (!a || a.length === 0) return [];
     try {
       return await this.searchTable.filter((s) => {
         const i = s.searchWords || [];

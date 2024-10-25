@@ -1,4 +1,4 @@
-import { SvelterSearchOptions, SearchItem } from "./types";
+import { SvelterSearchOptions, SearchItem } from './types';
 declare class SvelterSearch {
     private search_id;
     private update_interval;
