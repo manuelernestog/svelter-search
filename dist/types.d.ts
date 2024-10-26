@@ -5,6 +5,7 @@ export interface SvelterSearchOptions {
     date_url?: string;
     auto_update?: boolean;
     incrementalUpdate?: boolean;
+    result_limit?: number;
 }
 export interface SearchItem {
     id: string;

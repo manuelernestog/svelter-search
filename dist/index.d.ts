@@ -7,6 +7,7 @@ declare class SvelterSearch {
     private last_update;
     private auto_update;
     private incrementalUpdate;
+    private result_limit;
     private db;
     private searchTable;
     constructor(options?: SvelterSearchOptions);
