@@ -1,6 +1,6 @@
 {
   "name": "svelter-search",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Client first full-text search library",
   "main": "dist/svelter-search.umd.js",
   "module": "dist/svelter-search.es.js",

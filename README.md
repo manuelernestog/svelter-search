@@ -39,6 +39,7 @@ const searchInstance = new SvelterSearch({
   date_url: 'https://api.example.com/data-updated-at', // (Optional) URL to check last update date
   auto_update: true, // Whether to automatically update data before searching
   incrementalUpdate: true, // Whether updates are incremental (true) or full (false)
+  result_limit: 10, // Limit the number of results returned on the search (default 50)
 });
 ```
 

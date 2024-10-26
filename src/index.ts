@@ -1,7 +1,5 @@
-// src/SvelterSearch.ts
-
 import Dexie, { type Table } from 'dexie';
-import { SvelterSearchOptions, SearchItem, RemoteDateResponse } from "./types";
+import type { SvelterSearchOptions, SearchItem, RemoteDateResponse } from "./types";
 
 class SvelterSearch {
   private search_id: string;
@@ -11,6 +9,7 @@ class SvelterSearch {
   private last_update: Date;
   private auto_update: boolean;
   private incrementalUpdate: boolean;
+  private result_limit: number;
   private db: Dexie;
   private searchTable: Table<SearchItem, string>;
 
@@ -19,20 +18,19 @@ class SvelterSearch {
     this.update_interval = options.update_interval || 3600000; // 1 hour in milliseconds
     this.data_url = options.data_url || "";
     this.date_url = options.date_url || "";
+    this.result_limit = options.result_limit || 50;
     this.auto_update = options.auto_update ?? false;
     this.incrementalUpdate = options.incrementalUpdate ?? false;
 
-    this.db = new Dexie("svelter_search");
+    const db_name = `svelter_search_${this.search_id}`;
+    this.db = new Dexie(db_name);
 
-    // Define the schema
     const schema: { [key: string]: string } = {};
-    schema[this.search_id] = "&id, updated_at, search_value, *searchWords";
+    schema.items = "&id, updated_at, search_value, *searchWords";
     this.db.version(1).stores(schema);
 
-    // Initialize the table
-    this.searchTable = this.db.table<SearchItem, string>(this.search_id);
+    this.searchTable = this.db.table<SearchItem, string>('items');
 
-    // Hooks
     this.searchTable.hook("creating", (primKey: string, obj: SearchItem) => {
       if (typeof obj.search_value === "string") {
         obj.searchWords = this.getAllWords(obj.search_value);
@@ -52,7 +50,6 @@ class SvelterSearch {
       return mods;
     });
 
-    // Initialize last_update
     const lastUpdateKey = `svelter_search_${this.search_id}_last_update`;
     const storedLastUpdate = localStorage.getItem(lastUpdateKey);
     this.last_update = storedLastUpdate ? new Date(storedLastUpdate) : new Date(0);
@@ -69,17 +66,17 @@ class SvelterSearch {
     return [];
   }
 
-  public async update(data_url?: string): Promise<void> {
-    const url = data_url || this.data_url;
+  public async update(data_url = this.data_url): Promise<void> {
     if (!(await this.isUpdateNeeded())) return;
 
     if (!this.incrementalUpdate) await this.clear();
 
     try {
-      const response = await fetch(url);
+      const response = await fetch(data_url);
       const data: SearchItem[] = await response.json();
       await this.processData(data);
       this.last_update = new Date();
+
       localStorage.setItem(`svelter_search_${this.search_id}_last_update`, this.last_update.toISOString());
     } catch (error) {
       console.error("Error during update:", error);
@@ -88,21 +85,18 @@ class SvelterSearch {
   }
 
   private async isUpdateNeeded(): Promise<boolean> {
-    const now = Date.now();
-    const timeSinceLastUpdate = now - this.last_update.getTime();
-    if (timeSinceLastUpdate >= this.update_interval) return true;
+    const timeSinceLastUpdate = Date.now() - this.last_update.getTime();
 
-    return await this.isRemoteChanged();
+    if (timeSinceLastUpdate < this.update_interval) return false;
+    
+    return this.date_url === "" || await this.isRemoteChanged();
   }
 
   private async isRemoteChanged(): Promise<boolean> {
-    if (!this.date_url) return false;
-
     try {
       const response = await fetch(this.date_url);
       const data: RemoteDateResponse = await response.json();
-      const updatedAtDate = new Date(data.updated_at);
-      return updatedAtDate > this.last_update;
+      return new Date(data.updated_at) > this.last_update;
     } catch (error) {
       console.error("Error fetching remote update date:", error);
       return true;
@@ -157,6 +151,7 @@ class SvelterSearch {
             itemWords.some((itemWord) => itemWord.includes(searchWord))
           );
         })
+        .limit(this.result_limit)
         .toArray();
       return results;
     } catch (error) {
